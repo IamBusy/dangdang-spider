@@ -51,7 +51,6 @@ class DangSpider(scrapy.Spider):
         filename = response.url.split(".")[0]
         lis = response.selector.xpath('//ul[@class="bigimg"]/li')
         items = []
-        print(lis)
         for li in lis:
             # try:
             #     item = Product()
