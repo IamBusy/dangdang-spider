@@ -52,40 +52,35 @@ class DangSpider(scrapy.Spider):
         lis = response.selector.xpath('//ul[@class="bigimg"]/li')
         items = []
         for li in lis:
-            # try:
-            #     item = Product()
-            #     item['link'] = li.xpath('./a/@href').extract()[0]
-            #     item['photo'] = li.xpath('./a/img/@src').extract()[0]
-            #     item['title'] = li.xpath('./p[@class="name"]/a/@title').extract()[0]
-            #     item['sell_price'] = li.xpath('./p[@class="price"]/span[@class="search_now_price"]/text()').extract()[0][1:]
-            #     item['price'] = li.xpath('./p[@class="price"]/span[@class="search_pre_price"]/text()').extract()[0][1:]
-
-            #     equest = scrapy.Request(item['link'], callback = self.parseDetail)
-            #     request.meta['item'] = item
-            #     yield request
-            # except:
-            #     continue
-            item = Product()
-            item['link'] = li.xpath('./a/@href').extract()[0]
-            item['photo'] = li.xpath('./a/img/@src').extract()[0]
-            item['title'] = li.xpath('./p[@class="name"]/a/@title').extract()[0]
-            item['sell_price'] = li.xpath('./p[@class="price"]/span[@class="search_now_price"]/text()').extract()[0][1:]
-            item['price'] = li.xpath('./p[@class="price"]/span[@class="search_pre_price"]/text()').extract()[0][1:]
-
-            request = scrapy.Request(item['link'], callback = self.parseDetail)
-            request.meta['item'] = item
-            yield request
+            try:
+                item = Product()
+                item['link'] = li.xpath('./a/@href').extract()[0]
+                item['photo'] = li.xpath('./a/img/@src').extract()[0]
+                item['title'] = li.xpath('./p[@class="name"]/a/@title').extract()[0]
+                item['sell_price'] = li.xpath('./p[@class="price"]/span[@class="search_now_price"]/text()').extract()[0][1:]
+                item['price'] = li.xpath('./p[@class="price"]/span[@class="search_pre_price"]/text()').extract()[0][1:]
+    
+                request = scrapy.Request(item['link'], callback = self.parseDetail)
+                request.meta['item'] = item
+                yield request
+            except:
+                continue
+            
 
         nextPg = self.nextPageByCategory(number)
         if nextPg != "" :
             yield scrapy.Request(nextPg, callback=self.parse)
 
     def parseDetail(self, response):
-        item = response.meta['item']
-        for tx in response.xpath('//div[@id="detail_describe"]/ul[@class="key clearfix"]/li/text()').extract():
-            if tx.find('ISBN')>0 or tx.find('isbn')>0:
-                item['isbn'] = tx.split("：")[1]
-        item['publisher'] = response.xpath('//div[@class="messbox_info"]/span[@dd_name="出版社"]/a/text()').extract()[0]
-        yield item
+        try:
+            item = response.meta['item']
+            for tx in response.xpath('//div[@id="detail_describe"]/ul[@class="key clearfix"]/li/text()').extract():
+                if tx.find('ISBN')>0 or tx.find('isbn')>0:
+                    item['isbn'] = tx.split("：")[1]
+            item['publisher'] = response.xpath('//div[@class="messbox_info"]/span[@dd_name="出版社"]/a/text()').extract()[0]
+            yield item
+        except Exception as e:
+            pass
+        
     
 
