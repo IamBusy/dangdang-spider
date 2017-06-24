@@ -6,14 +6,19 @@
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 #from db.product import save_product
 
-f = open("product2.csv",'a')
 
 class DangdangPipeline(object):
+
+	def open_spider(self, spider):
+		self.file = open('product2.csv', 'a')
+
+    def close_spider(self, spider):
+    	self.file.close()
 
 
 	def process_item(self, item, spider):
 		item['title'] = item['title'].replace(',','，')
 		cont = "{},{},{},{},{},{},{}\n".format(item['title'], item['isbn'],item['price'],item['photo'],item['publisher'],item['link'],item['sell_price'])
-		f.write(cont)
-		
+		self.file.write(cont)
+
 		
