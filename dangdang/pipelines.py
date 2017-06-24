@@ -10,10 +10,10 @@
 class DangdangPipeline(object):
 
 	def open_spider(self, spider):
-		self.file = open('product2.csv', 'a')
+		self.file = open('product3.csv', 'a')
 
-    def close_spider(self, spider):
-    	self.file.close()
+	def close_spider(self, spider):
+		self.file.close()
 
 
 	def process_item(self, item, spider):
