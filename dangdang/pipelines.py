@@ -6,8 +6,7 @@
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 #from db.product import save_product
 
-f = open("product.csv",'a')
-print(f)
+f = open("product2.csv",'a')
 
 class DangdangPipeline(object):
 
@@ -16,4 +15,5 @@ class DangdangPipeline(object):
 		item['title'] = item['title'].replace(',','，')
 		cont = "{},{},{},{},{},{},{}\n".format(item['title'], item['isbn'],item['price'],item['photo'],item['publisher'],item['link'],item['sell_price'])
 		f.write(cont)
+		
 		
